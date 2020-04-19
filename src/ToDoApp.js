@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
@@ -9,8 +9,7 @@ import Grid from '@material-ui/core/Grid'
 
 import ToDoList from './ToDoList'
 import ToDoForm from './ToDoForm'
-
-import { v4 as uuid } from 'uuid'
+import useInitialToDos from './Hooks/useInitialToDoss'
 
 const styles = {
   paper: {
@@ -18,22 +17,13 @@ const styles = {
   },
 }
 
+const { todo, addToDo, toggleToDo, handleDelete, handleEdit } = useInitialToDos
+useEffect(() => {
+  window.localStorage.setItem('todoArray', JSON.stringify(todo))
+}, [todo])
+
 function ToDo(props) {
   const { classes } = props
-  const [todo, setToDo] = useState([
-    { id: 0, task: "Add some To-Do's", completed: false },
-  ])
-
-  const addToDo = (value) =>
-    setToDo([...todo, { id: uuid(), task: value, completed: false }])
-
-  const toggleToDo = (id) =>
-    setToDo(
-      todo.map((item) => {
-        return item.id === id ? { ...item, completed: !item.completed } : item
-      })
-    )
-  const handleDelete = (id) => setToDo(todo.filter((item) => item.id !== id))
   return (
     <Paper className={classes.paper}>
       <AppBar position="static">
@@ -42,11 +32,12 @@ function ToDo(props) {
         </Toolbar>
       </AppBar>
       <Grid container justify="center" alignContent="center">
-        <Grid item lg={4} md={6} sm={8} xs={11}>
+        <Grid item xl={3} lg={4} md={6} sm={8} xs={11}>
           <ToDoList
             todoArray={todo}
             toggleToDo={toggleToDo}
             handleDelete={handleDelete}
+            handleEdit={handleEdit}
           />
           <ToDoForm addToDo={addToDo} />
         </Grid>

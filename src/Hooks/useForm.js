@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function useForm() {
-  const [currState, setnewState] = useState()
+export default function useForm(preStateValue) {
+  const [currState, setnewState] = useState(preStateValue)
   return [currState, (value) => setnewState(value), () => setnewState('')]
 }
